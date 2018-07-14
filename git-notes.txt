@@ -1,0 +1,887 @@
+Introduction
+◦ History and background
+◦ Installation and configuration
+◦ A first Git project and repository
+◦ Basic concepts and terminology
+Basic operations
+◦ Adding, changing, deleting files
+◦ Looking at status and diff
+◦ Commit and log
+◦ Untracked and staged files
+GitHub
+◦ Bare and remote repositories
+◦ Push to remote
+◦ Using GitHub
+◦ Collaborating via GitHub
+◦ Clone or pull from remote repos
+Branching and merging
+◦ Guidelines for branching
+◦ Merging and resolving conflicts
+◦ Using tags for releases
+◦ Creating and applying patches
+Other commands
+◦ Reset and revert
+◦ Blame
+◦ Stash
+◦ Fetch and rebase
+◦ Bisect
+Git workflows
+◦ Typical workflows and using the right Git commands
+◦ Forking, synchronization and pull requests
+GitHub administration
+◦ Understand member roles and access permissions
+◦ Allow third-party collaborators with restricted permissions
+◦ Setup up and maintain teams
+◦ Manage the organizational account and billing
+===========================================================================
+Git came first, then GitHub
+Open source community has adopted Git.
+HTTP support for Git network transactions: came later: simpler than SSH
+SSH is a good idea if you use GitHub a lot
+VCS: version control system
+A few commands can get you 80% of the way
+Git branching model sets it apart from other VCS
+Distributed workflows: learning this is important
+Advanced: reset, bisect (to find bugs), edit history, revision selection
+Scripts to enforce policies
+Migrating from SVN
+Git's object model, server protocols, packfiles
+Command line power, Linux background, a little geeky, maybe hard for newbies, GUI hard to use
+GUI danger in exposing too many controls and hence confusing user
+GUI danger in simplifying too much and losing the power of command line
+Command line is ideal for most work
+SVN: one centralized repo; Git: forks and pull requests. Projects can stall due to conflicts.
+Then there are local repos for offline work.
+Since entire repo is local, things are fast and we can work offline. This includes history and diff.
+SVN and CVS: can edit offline but cannot commit.
+
+If you’re familiar with other VCS systems such as Subversion, you’ll notice that the command is "clone" and not "checkout". This is an important distinction – instead of getting just a working copy, Git receives a full copy of nearly all data that the server has. 
+
+Committed means that the data is safely stored in your local database. Modified means that you have changed the file but have not committed it to your database yet. Staged means that you have marked a modified file in its current version to go into your next commit snapshot.
+
+The Git directory is where Git stores the metadata and object database for your project. This is the most important part of Git, and it is what is copied when you clone a repository from another computer.
+
+The working directory is a single checkout of one version of the project. These files are pulled out of the compressed database in the Git directory and placed on disk for you to use or modify.
+
+Don’t Reset Public History
+You should never use git reset <commit> when any snapshots after <commit> have been pushed to a public repository. After publishing a commit, you have to assume that other developers are reliant upon it.
+Removing a commit that other team members have continued developing poses serious problems for collaboration. When they try to sync up with your repository, it will look like a chunk of the project history abruptly disappeared. The sequence below demonstrates what happens when you try to reset a public commit. The origin/master branch is the central repository’s version of your local master branch.
+
+“remotes” are just nicknames for other repositories, synonymous with a URL or the path of a local directory – you can set up extra remotes yourself with “git remote”, but “git clone” by default sets up “origin” for you.
+
+
+So what you mostly do with remote-tracking branches is one of the following:
+    Update them with git fetch
+    Merge from them into your current branch
+    Create new local branches based on them
+
+
+It's generally simplest to think of it as HEAD is the snapshot of your last commit. 
+So, it's simplest to think of it as the Index is the snapshot of your next commit. 
+The Working Directory is your scratch space, used to easily modify file content.
+
+When you checkout a branch, it changes HEAD to point to the new commit [of the branch], populates your Index with the snapshot of that commit, then checks out the contents of the files in your Index into your Working Directory.
+
+/etc/gitconfig file: git config --system
+User/local: ~/.gitconfig or ~/.config/git/config
+
+x86
+$ git config --global core.editor "'C:/Program Files/Notepad++/notepad++.exe' -multiInst -nosession"
+
+x64
+$ git config --global core.editor "'C:/Program Files (x86)/Notepad++/notepad++.exe' -multiInst -nosession"
+
+Add path to git on MAC:
+sudo vi /etc/paths
+
+To be efficient, if files have not changed, Git doesn’t store the file again, just a link to the previous identical file it has already stored
+
+You can tell Git throw away commits by “rewriting history” and with commands like git reset, but even in these cases Git “hangs onto” the newly discarded commits for a while, just in case you decide that you need them. See git reflog and git prune.
+
+If you send in a patch to a project and one of the core members applies the patch, both of you get credit – you as the author, and the core member as the committer. 
+
+GitHub: concept of outside collaborators is at repo level, not org level
+
+This organization has no public members. You must be a member to see who’s a part of this organization.
+
+Git clients GUI:
+Tortoise Git
+Git For Windows
+SourceTree
+Visual Studio Team Explorer
+http://www.eclipse.org/egit/
+
+Misleading terms:
++ commit: local, not remote
++ revert: not a rollback but another commit to remove specific commit
++ checkout: not really taking out files from the repo
+
+git reset main.cpp
+git reset a1e8fb5 main.cpp
+git reset a1e8fb5
+git checkout a1e8fb5
+git checkout a1e8fb5 hello.py
+git checkout HEAD hello.py
+
+
+Make two commits as one:
+git reset HEAD~2
+git commit
+
+git log options: let people try on their own from the slide
+
+
+Modularity of design and avoiding conflicts while merging
+
+What the heck? Now CONTRIBUTING.md is listed as both staged and unstaged. How is that possible? It turns out that Git stages a file exactly as it is when you run the git add command.
+vi main.cpp # edit file
+git add main.cpp # stage changes
+vi main.cpp # edit again
+git status # list in both staged and unstaged
+git checkout main.cpp # preserves working dir as in staged area but second edit is gone
+git diff # no changes
+git diff --cached # has changes from first edit
+
+Git doesn’t care about empty folders
+
+
+# Show all untracked files
+git ls-files --others
+# Show all untracked folders only
+git ls-files --others --directory
+
+
+# Patch of last two commits: -2 === -n 2
+git log -p -2
+
+# Patch between commits
+git log -p 0976059..7c24f85
+
+# show that this will change the hash: no new commit
+# user prompted with last comment
+git add leftout.h
+git commit --amend
+
+
+git checkout same as git reset --soft ?
+
+
+However, before you do that, note that if your working directory or staging area has uncommitted changes that conflict with the branch you’re checking out, Git won’t let you switch branches.
+
+Fast-forward merge of a hotfix, then delete the branch:
+After your super-important fix is deployed, you’re ready to switch back to the work you were doing before you were interrupted. However, first you’ll delete the hotfix branch, because you no longer need it – the master branch points at the same place. You can delete it with the -d option to git branch:
+
+
+# Stash untracked files as well: they will disappear from working tree and go into stash
+# stash@{0} is the latest stash: top of stack
+git stash -u
+
+You can save a stash on one branch, switch to another branch later, and try to reapply the changes. You can also have modified and uncommitted files in your working directory when you apply a stash – Git gives you merge conflicts if anything no longer applies cleanly.
+
+The first option that is quite popular is the --keep-index option to the stash save command. This tells Git to not stash anything that you’ve already staged with the git add command.
+
+
+You can’t really check out a tag in Git, since they can’t be moved around. If you want to put a version of your repository in your working directory that looks like a specific tag, you can create a new branch at a specific tag with git checkout -b [branchname] [tagname]:
+$ git checkout -b version2 v2.0.0
+Switched to a new branch 'version2'
+
+Contributor
+A contributor is someone who has contributed to a project by having a pull request merged but does not have collaborator access.
+
+
+Pull Requests
+Aside from isolating feature development, branches make it possible to discuss changes via pull requests. Once someone completes a feature, they don’t immediately merge it into master. Instead, they push the feature branch to the central server and file a pull request asking to merge their additions into master. This gives other developers an opportunity to review the changes before they become a part of the main codebase.
+You can think of pull requests as a discussion dedicated to a particular branch. This means that they can also be used much earlier in the development process. For example, if a developer needs help with a particular feature, all they have to do is file a pull request. Interested parties will be notified automatically, and they’ll be able to see the question right next to the relevant commits.
+
+git push -u origin marys-feature
+This command pushes marys-feature to the central repository (origin), and the -u flag adds it as a remote tracking branch. After setting up the tracking branch, Mary can call git push without any parameters to push her feature.
+
+If he wanted, Bill could pull marys-feature into his local repository and work on it on his own. Any commits he added would also show up in the pull request.
+
+# New branch
+git push origin marys-feature
+git push -u origin marys-feature # re-run with -u to track
+
+git checkout master
+git pull
+git pull origin marys-feature
+git push
+
+First, whoever’s performing the merge needs to check out their master branch and make sure it’s up to date. Then, git pull origin marys-feature merges the central repository’s copy of marys-feature. You could also use a simple git merge marys-feature, but the command shown above makes sure you’re always pulling the most up-to-date version of the feature branch. Finally, the updated master needs to get pushed back to origin.
+
+
+Instead of just moving the branch pointer forward, Git creates a new snapshot that results from this three-way merge and automatically creates a new commit that points to it. This is referred to as a merge commit, and is special in that it has more than one parent.
+
+$ git checkout -m mytopic
+Auto-merging frotz
+After this three-way merge, the local modifications are not registered in your index file, so git diff would show you what changes
+you made since the tip of the new branch.
+
+git merge <commit>
+<commit>...
+Commits, usually other branch heads, to merge into our branch. Specifying more than one commit will create a merge with more than
+two parents (affectionately called an Octopus merge).
+
+
+Just like the branch name “master” does not have any special meaning in Git, neither does “origin”. While “master” is the default name for a starting branch when you run git init which is the only reason it’s widely used, “origin” is the default name for a remote when you run git clone. If you run git clone -o booyah instead, then you will have booyah/master as your default remote branch.
+
+trinth@tnt:~/workspace/quicksort$ git checkout origin/master
+Note: checking out 'origin/master'.
+You are in 'detached HEAD' state.
+
+$ git fetch origin
+remote: Counting objects: 7, done.
+remote: Compressing objects: 100% (2/2), done.
+remote: Total 3 (delta 0), reused 3 (delta 0)
+Unpacking objects: 100% (3/3), done.
+From https://github.com/schacon/simplegit
+ * [new branch]      serverfix    -&gt; origin/serverfix
+It’s important to note that when you do a fetch that brings down new remote-tracking branches, you don’t automatically have local, editable copies of them. In other words, in this case, you don’t have a new serverfix branch – you only have an origin/serverfix pointer that you can’t modify.
+To merge this work into your current working branch, you can run git merge origin/serverfix. If you want your own serverfix branch that you can work on, you can base it off your remote-tracking branch:
+$ git checkout -b serverfix origin/serverfix
+Branch serverfix set up to track remote branch serverfix from origin.
+Switched to a new branch 'serverfix'
+
+$ git checkout --track origin/serverfix
+Branch serverfix set up to track remote branch serverfix from origin.
+Switched to a new branch 'serverfix'
+
+So if you’re on the master branch and it’s tracking origin/master, you can say something like git merge @{u} instead of git merge origin/master if you wish.
+
+
+# status of upstream tracking
+git branch -vv
+
+
+With the rebase command, you can take all the changes that were committed on one branch and replay them on another one.
+Often, you’ll do this to make sure your commits apply cleanly on a remote branch – perhaps in a project to which you’re trying to contribute but that you don’t maintain. In this case, you’d do your work in a branch and then rebase your work onto origin/master when you were ready to submit your patches to the main project. That way, the maintainer doesn’t have to do any integration work – just a fast-forward or a clean apply.
+Do not rebase commits that exist outside your repository.
+
+
+John isn’t allowed to push because Jessica has pushed in the meantime. This is especially important to understand if you’re used to Subversion, because you’ll notice that the two developers didn’t edit the same file. Although Subversion automatically does such a merge on the server if different files are edited, in Git you must merge the commits locally. 
+
+$ git log --no-merges issue54..origin/master
+commit 738ee872852dfaa9d6634e0dea7a324040193016
+Author: John Smith &lt;jsmith@example.com&gt;
+Date:   Fri May 29 16:01:27 2009 -0700
+
+   removed invalid default value
+
+The issue54..origin/master syntax is a log filter that asks Git to only show the list of commits that are on the latter branch (in this case origin/master) that are not on the first branch (in this case issue54). 
+
+
+As a general rule, your messages should start with a single line that’s no more than about 50 characters and that describes the changeset concisely, followed by a blank line, followed by a more detailed explanation.
+
+Can attach documents in GitHub for pull requests.
+
+
+If you want to merge in the target branch to make your Pull Request mergeable, you would add the original repository as a new remote, fetch from it, merge the main branch of that repository into your topic branch, fix any issues and finally push it back up to the same branch you opened the Pull Request on.
+
+
+GitHub also has a pretty nice notifications system built in that can come in handy when you have questions or need feedback from specific individuals or teams.
+
+In any comment you can start typing a @ character and it will begin to autocomplete with the names and usernames of people who are collaborators or contributors in the project.
+Opt out via Settings-->Notifications
+
+
+For instance, if you want to see all commits that are reachable from refA or refB but not from refC, you can type one of these:
+$ git log refA refB ^refC
+$ git log refA refB --not refC
+git log --oneline ^master feature-a feature-b # changes to be merges into master from feature branches
+
+
+
+The first thing reset will do is move what HEAD points to. This isn’t the same as changing HEAD itself (which is what checkout does); reset moves the branch that HEAD is pointing to. This means if HEAD is set to the master branch (i.e. you’re currently on the master branch), running git reset 9e5e6a4 will start by making master point to 9e5e6a4.
+
+Where reset will move the branch that HEAD points to, checkout will move HEAD itself to point to another branch.
+
+
+Although DbConnector is a subdirectory in your working directory, Git sees it as a submodule and doesn’t track its contents when you’re not in that directory. Instead, Git sees it as a particular commit from that repository.
+When you clone main repo:
+The DbConnector directory is there, but empty. You must run two commands: git submodule init to initialize your local configuration file, and git submodule update to fetch all the data from that project and check out the appropriate commit listed in your superproject.
+OR use --recursive when you clone.
+
+
+===========================================================================
+trinth@tnt:~/workspace/quicksort$ git cherry-pick a972e21
+error: could not apply a972e21... Deleted file xxx.
+hint: after resolving the conflicts, mark the corrected paths
+hint: with 'git add <paths>' or 'git rm <paths>'
+hint: and commit the result with 'git commit'
+trinth@tnt:~/workspace/quicksort$ git status
+On branch master
+Your branch and 'origin/master' have diverged,
+and have 2 and 7 different commits each, respectively.
+  (use "git pull" to merge the remote branch into yours)
+
+You are currently cherry-picking commit a972e21.
+  (fix conflicts and run "git cherry-pick --continue")
+  (use "git cherry-pick --abort" to cancel the cherry-pick operation)
+
+Unmerged paths:
+  (use "git add/rm <file>..." as appropriate to mark resolution)
+
+	deleted by them:    xxx
+
+no changes added to commit (use "git add" and/or "git commit -a")
+trinth@tnt:~/workspace/quicksort$ git rm xxx
+xxx: needs merge
+rm 'xxx'
+trinth@tnt:~/workspace/quicksort$ git status
+On branch master
+Your branch and 'origin/master' have diverged,
+and have 2 and 7 different commits each, respectively.
+  (use "git pull" to merge the remote branch into yours)
+
+You are currently cherry-picking commit a972e21.
+  (all conflicts fixed: run "git cherry-pick --continue")
+  (use "git cherry-pick --abort" to cancel the cherry-pick operation)
+
+Changes to be committed:
+
+	deleted:    xxx
+
+trinth@tnt:~/workspace/quicksort$ git cherry-pick --continue
+[master 56e3dba] Deleted file xxx.
+ 1 file changed, 1 deletion(-)
+ delete mode 100644 xxx
+trinth@tnt:~/workspace/quicksort$ git log --oneline --decorate --graph --all -10
+* 56e3dba (HEAD, master) Deleted file xxx.
+* fd1e755 Changes on master with merges pending from 2 other branches.
+| * a972e21 (feature-b) Deleted file xxx.
+| * 8145b3a (origin/feature-b) Feature-a line 2
+| * be0c61d Feature-a line 1
+| * 1bd9880 Feature-b line 2
+| * 53e363d Feature-b line 1
+|/  
+* 65a0ed5 Testing log queries for branching.
+| * 1a55177 (origin/feature-a, feature-a) Real Feature-a line 2
+| * 89cbd0f Real Feature-a line 1
+
+
+===========================================================================
+You may be wondering what the difference is between author and committer. The author is the person who originally wrote the patch, whereas the committer is the person who last applied the patch. So, if you send in a patch to a project and one of the core members applies the patch, both of you get credit — you as the author and the core member as the committer.
+
+
+
+    git format-patch/git am - this pair lets you turn commits into patches, generally submitted by email, then have someone else apply them. You remain the author; the person who applies them is the committer. This is pretty definitely what happened on github there.
+
+    git commit --amend, git rebase, git filter-branch. These are all basically variants on history rewriting, ranging from single commit to some history of a branch to the entire history. They can potentially modify the comitter information - in particular, they always rewrite the committer timestamp. The original author remains in place (in default modes of operation), and if the author is also the one doing the rewriting, their name and email stay, but the timestamp is naturally different.
+
+===========================================================================
+Reset to remote and discard all local branch changes:
+
+trinth@tnt:~/workspace/quicksort$ git checkout feature-c
+Switched to branch 'feature-c'
+Your branch is ahead of 'origin/feature-c' by 2 commits.
+  (use "git push" to publish your local commits)
+trinth@tnt:~/workspace/quicksort$ git log --oneline -10
+2ec53be Merge branch 'feature-c' of https://github.com/IndianEngineeringDesignForum/quicksort into feature-c
+93d4d6a soft reset HEAD~2: combining changes B and D.
+9e479d1 Merge branch 'feature-c' of github.com:IndianEngineeringDesignForum/quicksort into feature-c
+1b94ca5 D, clone 0
+1638e6f C, clone 1
+0227407 B, clone 0
+13967aa A, clone 1
+cbd8164 New line feature-c
+ce93953 Merge pull request #2 from IndianEngineeringDesignForum/quicksort-sudeep
+30f51f1 updated comment
+trinth@tnt:~/workspace/quicksort$ git reset origin/feature-c
+trinth@tnt:~/workspace/quicksort$ git log --oneline -10
+9e479d1 Merge branch 'feature-c' of github.com:IndianEngineeringDesignForum/quicksort into feature-c
+1b94ca5 D, clone 0
+1638e6f C, clone 1
+0227407 B, clone 0
+13967aa A, clone 1
+cbd8164 New line feature-c
+ce93953 Merge pull request #2 from IndianEngineeringDesignForum/quicksort-sudeep
+30f51f1 updated comment
+ab70f7e Merge branch 'bugfix-001'
+c724c9a bugfix done
+
+===========================================================================
+trinth@tnt:~/workspace/quicksort$ git status
+On branch master
+Your branch is ahead of 'origin/master' by 3 commits.
+  (use "git push" to publish your local commits)
+
+Changes to be committed:
+  (use "git reset HEAD <file>..." to unstage)
+
+	modified:   main.cpp
+
+trinth@tnt:~/workspace/quicksort$ git reset --soft main.cpp
+fatal: Cannot do soft reset with paths.
+
+===========================================================================
+The rebase moves all of the commits in master onto the tip of feature. The problem is that this only happened in your repository. All of the other developers are still working with the original master. Since rebasing results in brand new commits, Git will think that your master branch’s history has diverged from everybody else’s.
+
+The only way to synchronize the two master branches is to merge them back together, resulting in an extra merge commit and two sets of commits that contain the same changes (the original ones, and the ones from your rebased branch). Needless to say, this is a very confusing situation.
+===========================================================================
+Changes without conflict: A, B, C, D in that order
+clone 0: B, D --> push to remote
+clone 1: A, C --> pull from remote with B and D: log is as follows: listing is not linear time but branch-wise
+$ git glog
+*   9e479d1 - (HEAD, feature-c) Merge branch 'feature-c' of github.com:IndianEngineeringDesignForum/quicksort into feature-c (5 seconds ago) <Arvi
+|\  
+| * 1b94ca5 - (origin/feature-c) D, clone 0 (38 seconds ago) <Arvind Personal>
+| * 0227407 - B, clone 0 (2 minutes ago) <Arvind Personal>
+* | 1638e6f - C, clone 1 (57 seconds ago) <Arvind Padmanabhan>
+* | 13967aa - A, clone 1 (3 minutes ago) <Arvind Padmanabhan>
+
+# Here log is correct
+$ git log --oneline
+9e479d1 Merge branch 'feature-c' of github.com:IndianEngineeringDesignForum/quicksort into feature-c
+1b94ca5 D, clone 0
+1638e6f C, clone 1
+0227407 B, clone 0
+13967aa A, clone 1
+
+===========================================================================
+Cloning brings the whole repo but only master branch is created locally.
+-a to list all
+checkout to create a local tracking branch
+
+trinth@tnt:~/workspace/qss$ git branch -a
+* master
+  remotes/origin/HEAD -> origin/master
+  remotes/origin/feature-a
+  remotes/origin/feature-b
+  remotes/origin/feature-c
+  remotes/origin/master
+  remotes/origin/quicksort-sudeep
+trinth@tnt:~/workspace/qss$ git checkout feature-c
+Branch feature-c set up to track remote branch feature-c from origin.
+Switched to a new branch 'feature-c'
+trinth@tnt:~/workspace/qss$ git branch -a
+* feature-c
+  master
+  remotes/origin/HEAD -> origin/master
+  remotes/origin/feature-a
+  remotes/origin/feature-b
+  remotes/origin/feature-c
+  remotes/origin/master
+  remotes/origin/quicksort-sudeep
+trinth@tnt:~/workspace/qss$ git branch -vv
+* feature-c ce93953 [origin/feature-c] Merge pull request #2 from IndianEngineeringDesignForum/quicksort-sudeep
+  master    2059097 [origin/master] Enter new comment in Visual Studio Code. SSH is used.
+
+===========================================================================
+feature-a pushed without tracking, push again later with tracking: -u
+fetch all with tracking: git fetch -u origin
+After this, checkout branch, a local branch will be created that tracks the remote: not a new branch
+
+
+trinth@tnt:~/workspace/quicksort$ git branch -vv
+  feature-a 1a55177 Real Feature-a line 2
+  feature-b 8145b3a [origin/feature-b] Feature-a line 2
+* master    fd1e755 [origin/master: ahead 2, behind 7] Changes on master with merges pending from 2 other branches.
+trinth@tnt:~/workspace/quicksort$ git fetch origin
+From https://github.com/IndianEngineeringDesignForum/quicksort
+ * [new branch]      quicksort-sudeep -> origin/quicksort-sudeep
+trinth@tnt:~/workspace/quicksort$ git branch -vv
+  feature-a 1a55177 Real Feature-a line 2
+  feature-b 8145b3a [origin/feature-b] Feature-a line 2
+* master    fd1e755 [origin/master: ahead 2, behind 7] Changes on master with merges pending from 2 other branches.
+trinth@tnt:~/workspace/quicksort$ git branch -v
+  feature-a 1a55177 Real Feature-a line 2
+  feature-b 8145b3a Feature-a line 2
+* master    fd1e755 [ahead 2, behind 7] Changes on master with merges pending from 2 other branches.
+trinth@tnt:~/workspace/quicksort$ git branch --all
+  feature-a
+  feature-b
+* master
+  remotes/origin/feature-a
+  remotes/origin/feature-b
+  remotes/origin/master
+  remotes/origin/quicksort-sudeep
+trinth@tnt:~/workspace/quicksort$ git fetch origin
+trinth@tnt:~/workspace/quicksort$ git fetch origin -u
+trinth@tnt:~/workspace/quicksort$ git branch --all
+  feature-a
+  feature-b
+* master
+  remotes/origin/feature-a
+  remotes/origin/feature-b
+  remotes/origin/master
+  remotes/origin/quicksort-sudeep
+trinth@tnt:~/workspace/quicksort$ git branch -vv
+  feature-a 1a55177 Real Feature-a line 2
+  feature-b 8145b3a [origin/feature-b] Feature-a line 2
+* master    fd1e755 [origin/master: ahead 2, behind 7] Changes on master with merges pending from 2 other branches.
+trinth@tnt:~/workspace/quicksort$ git checkout quicksort-sudeep 
+Branch quicksort-sudeep set up to track remote branch quicksort-sudeep from origin.
+Switched to a new branch 'quicksort-sudeep'
+trinth@tnt:~/workspace/quicksort$ git branch -vv
+  feature-a        1a55177 Real Feature-a line 2
+  feature-b        8145b3a [origin/feature-b] Feature-a line 2
+  master           fd1e755 [origin/master: ahead 2, behind 7] Changes on master with merges pending from 2 other branches.
+* quicksort-sudeep 6b8af04 [origin/quicksort-sudeep] Merge remote-tracking branch 'origin/master'
+trinth@tnt:~/workspace/quicksort$ git push -u origin feature-a
+Username for 'https://github.com': arvindpdmn
+Password for 'https://arvindpdmn@github.com': 
+Branch feature-a set up to track remote branch feature-a from origin.
+Everything up-to-date
+trinth@tnt:~/workspace/quicksort$ git branch -vv
+  feature-a        1a55177 [origin/feature-a] Real Feature-a line 2
+  feature-b        8145b3a [origin/feature-b] Feature-a line 2
+  master           fd1e755 [origin/master: ahead 2, behind 7] Changes on master with merges pending from 2 other branches.
+* quicksort-sudeep 6b8af04 [origin/quicksort-sudeep] Merge remote-tracking branch 'origin/master'
+
+===========================================================================
+HEAD is, normally, a symbolic reference to [the tip of] a branch. For instance, if you do cat .git/HEAD on a brand new repository, you'll get back ref: refs/heads/master. When you add a commit, git actually updates 'master', because that's where HEAD points. You can see this by doing cat .git/refs/heads/master before and after making a commit. HEAD does not change (it's only a symbolic reference) but 'master' does.
+
+When you do a git checkout branchname, HEAD will now become a symbolic reference to 'branchname'. This means cat .git/HEAD will return ref: refs/heads/branchname now. New commits will now go on 'branchname' instead of master, and correspondingly, the contents of .git/refs/heads/branchname will change.
+
+However, when you checkout anything that is not a proper, local, branch name, then HEAD is no longer a symbolic reference to anything. Instead, it actually contains the SHA-1 hash (the commit id) of the commit you are switching to.
+
+get back to norm from detached HEAD: git checkout master
+
+Useful when you have committed on detached HEAD and checked out a branch. Recover those commits:
+git reflog
+git branch newone <commit>
+git checkout newone 
+===========================================================================
+trinth@tnt:~/workspace/quicksort$ git glog
+* a12b23e - (HEAD, origin/master, master) Removed comments. User/email changed for author. (15 hours ago) <Arvind Personal>
+* 4d2fd98 - Deleted lines. (23 hours ago) <Someone here>
+*   6b8af04 - (qss/master) Merge remote-tracking branch 'origin/master' (29 hours ago) <Someone here>
+|\  
+| * 8ef2c0a - Update quicksort.cpp (29 hours ago) <Arvind Padmanabhan>
+* | c68ac2d - Testing either pull or fetch without rebasing. (29 hours ago) <Someone here>
+* | 53fb989 - Ran dos2unix on main.cpp (29 hours ago) <Someone here>
+|/  
+* e3a5eee - (tag: v1.0) Third simple change to test rebase. (29 hours ago) <Someone here>
+* 4661328 - (tag: v1.1) Added .gitignore: simple change to test rebase. (29 hours ago) <Someone here>
+* a7c027b - First simple change to test rebase. (29 hours ago) <Someone here>
+* abaafef - Update main.cpp (29 hours ago) <Arvind Padmanabhan>
+* 76c4c2a - A new file (31 hours ago) <Arvind Padmanabhan>
+* 1c7f313 - Deleted *.o file. Added comments. (34 hours ago) <Someone here>
+* a0bfd93 - Adding new file with new project specific username. (2 days ago) <Someone here>
+* 7c24f85 - xyz variable added (2 days ago) <Arvind Padmanabhan>
+* 0976059 - Using default parameter. (2 days ago) <Arvind Padmanabhan>
+* fafaf59 - First commit. (2 days ago) <Arvind Padmanabhan>
+trinth@tnt:~/workspace/quicksort$ git bisect start
+Already on 'master'
+Your branch is up-to-date with 'origin/master'.
+trinth@tnt:~/workspace/quicksort$ git bisect good a0bfd93
+trinth@tnt:~/workspace/quicksort$ git bisect bad 4d2fd98
+Bisecting: 5 revisions left to test after this (roughly 3 steps)
+[46613282ca2ef8ecb70fc6de3cd1ae35e14baf71] Added .gitignore: simple change to test rebase.
+trinth@tnt:~/workspace/quicksort$ git bisect bad
+Bisecting: 2 revisions left to test after this (roughly 1 step)
+[76c4c2aab410e72c728ee59d9b1a723c4ee6ff20] A new file
+trinth@tnt:~/workspace/quicksort$ git bisect good
+Bisecting: 0 revisions left to test after this (roughly 1 step)
+[a7c027bf3434368fd7c331445b00c4cdacd7eb7f] First simple change to test rebase.
+trinth@tnt:~/workspace/quicksort$ git bisect bad
+Bisecting: 0 revisions left to test after this (roughly 0 steps)
+[abaafef129e8a9ab620f6554be3df32cc6a7c1e2] Update main.cpp
+trinth@tnt:~/workspace/quicksort$ git bisect good
+a7c027bf3434368fd7c331445b00c4cdacd7eb7f is the first bad commit
+commit a7c027bf3434368fd7c331445b00c4cdacd7eb7f
+Author: Someone here <arvindpdmn@iedf.in>
+Date:   Thu Mar 24 17:40:36 2016 +0530
+
+    First simple change to test rebase.
+
+:100644 100644 03f23573e07b26c581c917aca25d6666681fac04 0a70207ffa15282f6c8942e9a5d0992090c59cb7 M	main.cpp
+===========================================================================
+
+
+Aliases
+
+$ git config --global alias.co checkout
+$ git config --global alias.br branch
+$ git config --global alias.ci commit
+$ git config --global alias.st status
+===========================================================================
+git pull origin master # tags not updated
+git pull # tags updated
+
+trinth@tnt:~/workspace/quicksort$ git pull origin master
+From https://github.com/IndianEngineeringDesignForum/quicksort
+ * branch            master     -> FETCH_HEAD
+Already up-to-date.
+trinth@tnt:~/workspace/quicksort$ git status
+On branch master
+Your branch is up-to-date with 'origin/master'.
+
+nothing to commit, working directory clean
+trinth@tnt:~/workspace/quicksort$ git tag
+trinth@tnt:~/workspace/quicksort$ git fetch origin master
+From https://github.com/IndianEngineeringDesignForum/quicksort
+ * branch            master     -> FETCH_HEAD
+trinth@tnt:~/workspace/quicksort$ git tag
+trinth@tnt:~/workspace/quicksort$ git pull
+From https://github.com/IndianEngineeringDesignForum/quicksort
+ * [new tag]         v1.0       -> v1.0
+ * [new tag]         v1.1       -> v1.1
+Already up-to-date.
+trinth@tnt:~/workspace/quicksort$ git tag
+v1.0
+v1.1
+
+===========================================================================
+trinth@tnt:~/workspace/quicksort$ git mv main.cpp mm.cpp
+trinth@tnt:~/workspace/quicksort$ git status -s
+R  main.cpp -> mm.cpp
+
+To restore:
+git reset mm.cpp
+mv mm.cpp main.cpp
+===========================================================================
+Another useful thing you may want to do is to keep the file in your working tree but remove it from your staging area. In other words, you may want to keep the file on your hard drive but not have Git track it anymore. This is particularly useful if you forgot to add something to your .gitignore file and accidentally staged it, like a large log file or a bunch of .a compiled files. To do this, use the --cached option:
+
+$ git rm --cached README
+
+You can pass files, directories, and file-glob patterns to the git rm command. That means you can do things such as:
+
+$ git rm --cached log/\*.log
+
+Note the backslash (\) in front of the *. This is necessary because Git does its own filename expansion in addition to your shell’s filename expansion. 
+===========================================================================
+Brings up editor and exit without comments:
+trinth@tnt:~/workspace/quicksort$ git commit -a
+Aborting commit due to empty commit message.
+
+git config --global core.editor vi
+git config --global --unset core.editor
+
+===========================================================================
+Debug/
+Release/
+/Readme.tmp
+*.o
+test[1-4].txt
+tmp/*.bin
+docs/**/*.pdf
+
+*.o will match for all subfolders as well
+** for nested folders within a given subfolder
+===========================================================================
+--> Example of no remote repo:
+trinth@tnt:~/workspace/quicksort$ git status
+On branch master
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+	abc/
+	quicksort.zip
+
+nothing added to commit but untracked files present (use "git add" to track)
+
+
+trinth@tnt:~/workspace/quicksort$ git push -u origin master
+Username for 'https://github.com': arvindpdmn
+Password for 'https://arvindpdmn@github.com': 
+Counting objects: 20, done.
+Delta compression using up to 4 threads.
+Compressing objects: 100% (19/19), done.
+Writing objects: 100% (20/20), 15.25 KiB | 0 bytes/s, done.
+Total 20 (delta 8), reused 0 (delta 0)
+To https://github.com/IndianEngineeringDesignForum/quicksort.git
+ * [new branch]      master -> master
+Branch master set up to track remote branch master from origin.
+
+--> Example of remote repo:
+trinth@tnt:~/workspace/quicksort$ git status
+On branch master
+Your branch is up-to-date with 'origin/master'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+	modified:   main.cpp
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+	.gitignore
+	quicksort.zip
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+
+git pull origin master # OK
+git pull origin/master # KO
+
+===========================================================================
+Testing rebase:
+trinth@tnt:~/workspace/quicksort$ git glog
+* ea58360 - (HEAD, master) Third simple change to test rebase. (57 seconds ago) <Someone here>
+* e55c545 - Added .gitignore: simple change to test rebase. (73 seconds ago) <Someone here>
+* d2d823f - First simple change to test rebase. (2 minutes ago) <Someone here>
+* 76c4c2a - (origin/master) A new file (2 hours ago) <Arvind Padmanabhan>
+* 1c7f313 - Deleted *.o file. Added comments. (5 hours ago) <Someone here>
+* a0bfd93 - Adding new file with new project specific username. (9 hours ago) <Someone here>
+* 7c24f85 - xyz variable added (20 hours ago) <Arvind Padmanabhan>
+* 0976059 - Using default parameter. (23 hours ago) <Arvind Padmanabhan>
+* fafaf59 - First commit. (23 hours ago) <Arvind Padmanabhan>
+
+
+On GitHub:
+
+abaafef
+Update main.cpp
+arvindpdmn committed a minute ago
+
+76c4c2a
+A new file
+arvindpdmn committed 2 hours ago
+
+1c7f313
+Deleted *.o file. Added comments.
+Someone here committed 5 hours ago
+
+a0bfd93
+Adding new file with new project specific username.
+Someone here committed 9 hours ago
+
+After git pull --rebase; git rebase --continue
+Notice three new commit IDs: history is rewritten! All three commits at same time. Original times are lost.
+trinth@tnt:~/workspace/quicksort$ git glog
+* e3a5eee - (HEAD, master) Third simple change to test rebase. (12 seconds ago) <Someone here>
+* 4661328 - Added .gitignore: simple change to test rebase. (12 seconds ago) <Someone here>
+* a7c027b - First simple change to test rebase. (12 seconds ago) <Someone here>
+* abaafef - (origin/master) Update main.cpp (13 minutes ago) <Arvind Padmanabhan>
+* 76c4c2a - A new file (2 hours ago) <Arvind Padmanabhan>
+* 1c7f313 - Deleted *.o file. Added comments. (5 hours ago) <Someone here>
+* a0bfd93 - Adding new file with new project specific username. (9 hours ago) <Someone here>
+* 7c24f85 - xyz variable added (20 hours ago) <Arvind Padmanabhan>
+* 0976059 - Using default parameter. (23 hours ago) <Arvind Padmanabhan>
+* fafaf59 - First commit. (23 hours ago) <Arvind Padmanabhan>
+
+===========================================================================
+Local repo:
+trinth@tnt:~/workspace/quicksort$ git glog
+* c68ac2d - (HEAD, master) Testing either pull or fetch without rebasing. (8 seconds ago) <Someone here>
+* 53fb989 - Ran dos2unix on main.cpp (5 minutes ago) <Someone here>
+* e3a5eee - (origin/master) Third simple change to test rebase. (13 minutes ago) <Someone here>
+* 4661328 - Added .gitignore: simple change to test rebase. (13 minutes ago) <Someone here>
+
+Remote repo:
+8ef2c0a
+Update quicksort.cpp
+arvindpdmn committed a minute ago
+e3a5eee
+Third simple change to test rebase.
+Someone here committed 27 minutes ago
+
+trinth@tnt:~/workspace/quicksort$ git fetch 
+remote: Counting objects: 3, done.
+remote: Compressing objects: 100% (3/3), done.
+remote: Total 3 (delta 2), reused 0 (delta 0), pack-reused 0
+Unpacking objects: 100% (3/3), done.
+From https://github.com/IndianEngineeringDesignForum/quicksort
+   e3a5eee..8ef2c0a  master     -> origin/master
+
+git fetch may also fetch new tags if they have appeared in the remote repository.
+git log # no change: 8ef2c0a not shown; working tree not updated
+git diff master origin/master # useful since working tree doesn't have the update
+
+
+trinth@tnt:~/workspace/quicksort$ git status
+On branch master
+Your branch and 'origin/master' have diverged,
+and have 2 and 1 different commit each, respectively.
+  (use "git pull" to merge the remote branch into yours)
+
+nothing to commit, working directory clean
+
+After merge: git merge origin/master
+trinth@tnt:~/workspace/quicksort$ git glog
+*   6b8af04 - (HEAD, master) Merge remote-tracking branch 'origin/master' (11 seconds ago) <Someone here>
+|\  
+| * 8ef2c0a - (origin/master) Update quicksort.cpp (12 minutes ago) <Arvind Padmanabhan>
+* | c68ac2d - Testing either pull or fetch without rebasing. (11 minutes ago) <Someone here>
+* | 53fb989 - Ran dos2unix on main.cpp (16 minutes ago) <Someone here>
+|/  
+* e3a5eee - Third simple change to test rebase. (24 minutes ago) <Someone here>
+
+trinth@tnt:~/workspace/quicksort$ git status
+On branch master
+Your branch is ahead of 'origin/master' by 3 commits.
+  (use "git push" to publish your local commits)
+
+nothing to commit, working directory clean
+
+
+trinth@tnt:~/workspace/quicksort$ git push origin master
+Username for 'https://github.com': arvindpdmn
+Password for 'https://arvindpdmn@github.com': 
+Counting objects: 14, done.
+Delta compression using up to 4 threads.
+Compressing objects: 100% (9/9), done.
+Writing objects: 100% (9/9), 1.29 KiB | 0 bytes/s, done.
+Total 9 (delta 5), reused 0 (delta 0)
+To https://github.com/IndianEngineeringDesignForum/quicksort.git
+   8ef2c0a..6b8af04  master -> master
+
+
+What we see on remote now (note the order is preserved by time of change):
+6b8af04
+c68ac2d
+8ef2c0a
+53fb989
+e3a5eee
+
+===========================================================================
+
+trinth@tnt:~/workspace$ git config --list
+user.email=arvindpdmn@iedf.in
+user.name=Arvind Padmanabhan
+core.pager=less -x1,5
+trinth@tnt:~/workspace$ cd quicksort/
+trinth@tnt:~/workspace/quicksort$ git config --list
+user.email=arvindpdmn@iedf.in
+user.name=Arvind Padmanabhan
+core.pager=less -x1,5
+core.repositoryformatversion=0
+core.filemode=true
+core.bare=false
+core.logallrefupdates=true
+user.name=Someone here
+
+===========================================================================
+Links:
+http://justinhileman.info/article/git-pretty/git-pretty.png
+http://ndpsoftware.com/git-cheatsheet.html
+https://training.github.com/kit/downloads/github-git-cheat-sheet.pdf
+https://git-scm.com/doc
+https://gist.github.com/maciakl/1584387
+http://stackoverflow.com/questions/4127425/whats-the-difference-between-vcs-and-scm
+http://blog.falafel.com/what-is-the-best-windows-git-client/
+
+https://help.github.com/articles/generating-ssh-keys
+https://help.github.com/ssh-issues/
+
+https://github.com/altairengineering
+
+===========================================================================
+git init
+git add .
+git commit -m "First commit"
+git remote add origin https://something.git
+git push origin master
+
+This basically telling git “Yo, git – I want you to become aware of a remote repository on Github, which I will from now on refer to as ‘origin’ and it’s located at this address”
+
+Master is the name of the branch – the default one is always master, unless you have changed it. Origin is the nickname we gave to your repository in the last command. If everything worked correctly, you should see your files show up on Github. 
+
+-u, --set-upstream
+           For every branch that is up to date or successfully pushed, add upstream (tracking) reference, used by argument-less git-pull(1)
+           and other commands. For more information, see branch.<name>.merge in git-config(1).
+
+
+
+
+Changes:
+git add .
+git commit -m "I made changes"
+git push origin master
+
+
+git log
+git log --oneline --name-only

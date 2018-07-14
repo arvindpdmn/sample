@@ -1,0 +1,314 @@
+<hr id="system-readmore" />
+{source}<?php
+require_once(JPATH_LIBRARIES.'/geshi/wrapper.php');
+?>{/source}
+
+
+<!-- ------------------------------------------------------------------------- -->
+<h2 class="topic-header">What is Git? What is GitHub?</h2>
+<p>Imagine a project with lots of files created or updated by multiple team members. Wouldn't it be nice to track who has changed what and when? Wouldn't it be nice to see the changes line by line? Wouldn't it be nice to selectively choose one person's change for some lines and another's change for other lines? Wouldn't it be nice to allow sub-teams to work on their modules independently until a future point in time when they decide to integrate their changes?</p>
+<p>Systems that allow these are called <em>Version Control Sytems (VCS)</em>. Such systems have been around for decades but they were by and large <em>centralized</em>. In other words, team members could make the changes locally but coordination across the team was possible only on a centralized server where the main repository of the project resided. <a href="https://git-scm.com/" target="_blank">Git</a> improves on this by adopting a <em>distributed</em> approach, which is why it's classified as DVCS. There are a few DVCS implementations and Git is one of them. Git is perhaps the most popular one since most open source projects adopt it. Why is Git so popular?<p>
+<p>Git is easy to learn but at the same time it's got enough commands to satisfy any advanced user. Git is free and open source. It has been designed for speed and efficiency. It comes with built-in data integrity protection, which means that no one can maliciously change a file without Git knowing about it. The fact that Git can be used offline without any loss of functionality is another plus.</p>
+<p>If Git is a DVCS, what's GitHub? Git depends on project or code repositories but these repositories must be hosted somewhere. We said that Git is distributed but there still has to be at least one public repository for coordinating changes across team members. While it's possible to host the main repository locally on your laptop, this is far from ideal. While it's possible to host it on a server on your intranet, this means that you need to have a server, maintain it, secure it and take regular backups. Wouldn't it be nice if someone does all this for you? This is what GitHub offers.</p>
+<p><a href="http://github.com/" target="_blank">GitHub</a> is a web hosting service for your Git repositories. You can have copies of the repositories locally, make changes locally and <em>push</em> the changes back to GitHub. This way, others can obtain your changes via GitHub. Updating your local repository with changes from another repository is called a <em>pull</em>.</p>
+<div class="uk-grid">
+  <div class="uk-width-medium-2-5">Two public repositories
+    <img src="images/workshops/GitGitHub/ours-john.png" style="padding-right:0px;">
+  </div>
+  <div class="uk-width-medium-3-5">One central repository
+    <img src="images/workshops/GitGitHub/local-central-repo.png" style="padding-left:0px">
+  </div>
+</div>
+<p>We can understand this by considering two ways of using Git and GitHub. Assume you and John are working on similar projects and you both wish to share code. Each of you has a private repository, perhaps locally stored on your individual laptops. John can push his code to his public repository on GitHub, from where you can pull the changes to your local repository. Thus, there is no main or central repository. In this example, there are multiple public repositories to share code. In another example, multiple team members could be working on the same code base hosted in a single shared repository on GitHub. All other local repositories can push and pull changes via the main repository.</p>
+<p>GitHub is not the only such service on the web. <a href="http://bitbucket.org/" target="_blank">BitBucket</a> is another popular offering. Accounts on GitHub are free. Open source and public code can be hosted for free on GitHub. Anything that's private requires a paid package. For those who wish to host respositories within their company's intranet, they can download and install <a href="http://gitlab.com" target="_blank">GitLab</a> instead. For an alternative to Git, you can consider <a href="https://www.mercurial-scm.org/" target="_blank">Mercurial</a>.</p>
+
+
+<!-- ------------------------------------------------------------------------- -->
+<h2 class="topic-header">Installation & Setup</h2>
+<p>It's pretty easy to install Git on your system. You can <a href="https://git-scm.com/download" target="_blank">download Git</a> from the official site. Downloads are available for different platforms/OS. Choose one that's relevant to you. No installation is required to connect to GitHub.</p>
+<p>It's common for developers to collaborate on a project from different platforms. Someone using Linux may push code changes to a GitHub repository created by another developer who uses Windows. Windows ends newlines with a carriage return and line feed, CRLF. In Unix systems, only a LF may be present for newlines. Git handles this difference well but you will need to select the correct configuration option. Normally, you will be prompted to choose during installation. It is recommended that you choose <strong>"Checkout Windows-style, commit Unix-style line endings"</strong>. What this does is to store only LF in repositories but when files are checked out for you to work on, LF will be converted to CRLF on Windows. When committing changes to the repository, CRLF will be converted back to LF.</p>
+<p>The other user prompt during installation will ask if you wish to update your PATH environment variable. You may select this on Windows provided you have Cygwin installed and intend to use Cygwin. The simplest is really to select <strong>"Use Git Bash only"</strong> option.</p>
+<p>While Git Bash is a command line tool for accessing Git, users who prefer a graphical interface can optionally install Git GUI clients. These GUI clients are useful for basic work but often have confusing menus and options when you want to do more advanced stuff. In other cases, advanced commands are simply not possible on these <a href="https://git-scm.com/downloads/guis" target="_blank">GUI clients</a>. In any case, these can be handy for beginners. Some well-known GUI clients are listed below:</p>
+<ul>
+  <li><a href="https://www.atlassian.com/software/sourcetree/overview/" target="_blank">SourceTree</a>: Windows, Mac</li>
+  <li><a href="https://tortoisegit.org/" target="_blank">TortoiseGit</a>: Windows</li>
+  <li><a href="http://www.gitkraken.com/" target="_blank">GitKraken</a>: Windows, Mac, Ubuntu</li>
+  <li><a href="https://git-for-windows.github.io/" target="_blank">Git For Windows</a>: this comes by default on Windows when you install Git</li>
+</ul>
+<p>If you don't prefer any GUI client, you can chose to integrate Git with your IDE environment. Often your IDE may have a plugin to do this. Two possible integrations are listed below:</p>
+<ul>
+  <li><a href="https://visualstudio.github.com/" target="_blank">GitHub extension for Visual Studio</a></li>
+  <li><a href="http://www.eclipse.org/egit/" target="_blank">EGit for Eclipse</a></li>
+</ul>
+<p>Once Git is installed, you can open Git Bash and try these commands (replace <em>&lt;name&gt;</em> and <em>&lt;email&gt;</em> as suitable):</p>
+{source}<?php echo geshiHighlight('
+# Version and configuration
+git --version
+git config --list
+
+# Update global settings
+git config --global user.name <em>&lt;name&gt;</em>
+git config --global user.email <em>&lt;email&gt;</em>
+', 'bash');?>{/source}
+<p>Note that without the <code>--global</code> option, configuration is updated only for the current repository where the command is executed. Thus it's possible to have some common configuration globally and some configuration specific to each repository. System-level configuration is applied first (for all users on that system), then user-level global configuration is applied next (for all repositories of that user) and finally repository-specific configuration. We will learn more in the next section when we create our first repository. Configuration files are usually located in these folders:</p>
+<ul>
+  <li><strong>System:</strong> <code>C:\ProgramData\Git\config</code> or <code>/etc/gitconfig</code></li>
+  <li><strong>Global/User:</strong> <code>$HOME/.gitconfig</code> (<code>$HOME = C:\Users\$USER</code>)</li>
+  <li><strong>Local:</strong> <code>&lt;projDir&gt;/.git/config</code></li>
+</ul>
+
+
+<!-- ------------------------------------------------------------------------- -->
+<h2 class="topic-header">Your First Git Repository</h2>
+<p>Suppose you already have a folder where your source files are stored. For example, if it's a C language project, there might be README, makefile, *.cpp, *.c and *.h files. Let's assume that your project is in a folder named <em>quicksort</em>. Then, you can initialize your first Git repository as follows:</p>
+{source}<?php echo geshiHighlight('cd quicksort
+git init
+git add .
+git commit -m "First commit. Compiles okay."', 'bash');?>{/source}
+<p>Suppose you have no code and wish to start from scratch. Then you can initialize a Git repository as follows, creating the folder <em>quicksort</em> (and some files) in the process:</p>
+{source}<?php echo geshiHighlight('git init quicksort
+cd quicksort
+touch README makefile quicksort.cpp quicksort.h main.cpp
+git add .
+git commit -m "First commit. Empty project."', 'bash');?>{/source}
+<p>Let's understand what's happening. The <code>init</code> command initializes the Git repository. Under the hood, it creates a folder named <em>.git/</em> where important configuration and housekeeping information about the repository is kept. The <code>add</code> command adds files and folders so that they can be tracked by Git. If this is not done, Git will treat these as entries in the local file system and will not track changes. We usually don't need to add temporary files such as cache files, log files, error files, object files or generated executables. Source files, design files, documents, configuration files, project settings, test vectors... these are usually tracked and we need to add them to Git. The <code>commit</code> command is the final confirmation to Git to create a new version entry in the repository for these recent changes.</p>
+<p>If you have done your first commit, you can proceed to make changes to your project. This could be modifying an existing file or adding a new file to the repository. Once these changes are done, you may run the following commands (comments have been added for your learning):</p>
+{source}<?php echo geshiHighlight('# Check current status of changes
+git status
+
+# View what has changed
+git diff
+
+# Add the changes to Git
+git add .
+
+# Commit the changes to the repository
+git commit -m "Correct code indentation."
+
+# View the status after commit
+git status
+
+# View the log of changes
+git log', 'bash');?>{/source}
+<p>Note that after the commit is done, <code>git status</code> should not show any changes except files that we deliberately don't wish to track. It's common in projects to have lots of generated objects file and executables that don't need to be tracked. It can be annoying to keep seeing these files as the output of <code>git status</code> command. For this purpose, Git allows us to define a <em>.gitignore</em> file. This file can contain a list of file that <code>git status</code> can ignore. An example <em>.gitignore</em> file is listed below:</p>
+{source}<?php echo geshiHighlight('Debug/
+Release/
+/Readme.tmp
+*.o
+test[1-4].txt
+tmp/*.bin
+docs/**/*.pdf
+', 'bash');?>{/source}
+<p>Briefly, the syntax used in the <em>.gitignore</em> file follows these guidelines:</p>
+<ul>
+  <li>Ending / for folder</li>
+  <li>Starting / for current folder</li>
+  <li>Glob patterns can be used:
+    <ul>
+      <li>* ? [ ]</li>
+      <li>** for nested folders</li>
+    </ul>
+  </li>
+</ul>
+<p>While <code>git status -uno</code> is a command that ignores untracked files, using the <code>-uno</code> option can be a problem sometimes. You may forget to add and commit a newly created file that needs to be in the repository. For this reason, use of <em>.gitignore</em> is preferred. It's also common practice to commit the <em>.gitignore</em> file since others using your public repository can benefit from it. In fact, there is a repository in GitHub that brings together a nice <a href="https://github.com/github/gitignore" target="_blank">collection of .gitignore templates</a>.</p>
+<p>We mentioned earlier that repository-specific configuration can be set. Why would one want to do this? Imagine you are working on some official projects for your employer but also working on some open source pet projects. For the former, you are likely to use your real name and an official email address. For the latter, you may use a nickname and a personal email address. Git allows you this flexibility. Some useful commands in this regard are noted below (for repository-specific configuration, you must be inside the repository folder):</p>
+{source}<?php echo geshiHighlight('# Repository-specific configuration
+git config user.name <em>&lt;name&gt;</em>
+git config user.email <em>&lt;email&gt;</em>
+
+# Edit line ending config (recommended on Windows)
+git config --global core.autocrlf true
+
+# Edit line ending config (recommended on OS X and Linux)
+git config --global core.autocrlf input
+
+# Bring up default text editor for editing global config
+git config --global --edit
+
+# List all configuration
+git config --list
+
+# List system configuration
+git config --system --list
+
+# List global configuration
+git config --global --list
+
+# List repository-specific configuration
+git config --local --list', 'bash');?>{/source}
+
+
+<!-- ------------------------------------------------------------------------- -->
+<h2 class="topic-header">Using GitHub</h2>
+<p>What we created in the previous section was a local repository, which is not very useful for collaboration or open source projects. To share this code with others, we need to create a public repository and push the code to that repository. We will use GitHub for this purpose. Our local repository will continue to exist but it will become linked to the remote repository on GitHub. Changes in either of these repositories can be pushed and pulled as required.</p>
+<p>Do the following on <a href="http://github.com/" target="_blank">GitHub</a>:</p>
+<ol>
+  <li>Create an account if you don't already have one.</li>
+  <li>GitHub allows you to choose different plans: Personal, Organization, Enterprise. By default, an account is personal to you on a free plan. Free accounts don't permit you to make your repositories private.</li>
+  <li>Create a new repository. For example, give it a name <em>quicksort</em>, to be consistent with our earlier example.</li>
+</ol>
+<p>Now we can push our local code to the remote repository just created (replace <em>&lt;username&gt;</em> with your username on GitHub):</p>
+{source}<?php echo geshiHighlight('cd quicksort
+git remote add origin https://github.com/&lt;username&gt;/quicksort.git
+git push -u origin master', 'bash');?>{/source}
+<p>That's it! Your code and its entire history of changes should now be visible on GitHub. The name <em>origin</em> is usually the default name given to refer to a remote repository. The name <em>master</em> is usually the name of main branch of the repository. By saying <code>git push -u origin master</code>, we are asking Git to push our local repository to the <em>master</em> branch of the remote repository named as <em>origin</em>. The option <code>-u</code> helps us track locally any changes that others may make on the remote repository.</p>
+<p>You can try making changes locally (on your local repository), adding and committing them as before. Before pushing these changes to remote, try running <code>git status</code>, which will show that your repository is ahead of <em>origin/master</em>. Git will hint that these changes may need to be pushed up to the remote. Remote public repositories from which others on the team may derive their local repositories are usually termed as <em>upstream</em>. Anything derived from it is called <em>downstream</em>.</p>
+<img src="images/workshops/GitGitHub/repo-page.png" style="width:100%;">
+<p>You may now explore the following features on GitHub within the context of a repository:</p>
+<ul>
+  <li><strong>Unwatch:</strong> This lets you select if you wish to be notified of changes to this repository. Notifications will appear on your dashboard. Dashboard is accessed by clicking the icon on the top left corner or simply entering <a href="https://github.com" target="_blank">https://github.com</a></li>
+  <li><strong>Star:</strong> You can star this repo if you like it.</li>
+  <li><strong>Commits:</strong> This tab shows a list of all commits. It's possible to also look at the changes made with each commit by clicking on the 7-digit number. This number is also known as the commit ID. In actual fact, it is a SHA-1 hash generated from the repository contents for the purpose of data integrity. Every commit will have a 40-digit value but usually only the first few digits are shown for brevity. It's also possible for those will access permissions to give review or approval comments on each commit.</li>
+  <li><strong>Branches:</strong> This tab lists all the branches of the repository. The default branch is named <em>master</em>. We will learn more about branches in a later section.</li>
+  <li><strong>Releases:</strong> This tab lists all formal releases made from this repository. This helps others to obtain stable tested code rather than code under development. Let us briefly note that <em>tags</em> are a Git concept while <em>releases</em> are a GitHub concept. Releases make use of tags.</li>
+  <li><strong>Download ZIP:</strong> This allows a user to download a Zip archive of all the files in the repository. In other words, rather than obtaining the entire repository with all its history and versions, only a chosen snapshot is obtained. The snapshot may be based on a branch or a tag.</li>
+</ul>
+<p>Let's assume that someone finds your project interesting and decides to contribute. You may go into <em>Settings</em> and add that person as a <em>collaborator</em>. You can even set the permissions for the collaborator as Admin, Write or Read. The collaborator can now derive a local repository from your public repository (replace <em>&lt;username&gt;</em> as suitable):</p>
+{source}<?php echo geshiHighlight('git clone https://github.com/&lt;username&gt;/quicksort', 'bash');?>{/source}
+<p>A <em>clone</em> is a copy of the entire repository, not just a snapshot of a particular version. This allows your collaborators to work completely offline (if they so desire) and push their changes later when they come online. Keep in mind that collaborators having only read permissions cannot push their changes. When collaborators push code upstream, you can pull them into your local repository:</p>
+{source}<?php echo geshiHighlight('git pull origin master', 'bash');?>{/source}
+<p>Git will not allow you to push your changes upstream until you have obtained your collaborator's changes to your local repository. This is true even if you and collaborator have modified different files. When a pull is done, Git merges your collaborator's changes with your own changes and creates a new commit. If there's a merge conflict such as when you and your collaborator have changed the same sections of code, Git will ask you to resolve the conflict manually. Once you have resolved the same, you can add and commit the changes from the merge. Finally, you may wish to push the merged code back to the upstream repository.</p>
+
+
+<!-- ------------------------------------------------------------------------- -->
+<h2 class="topic-header">Essential Concepts</h2>
+<p>We have covered the basics of creating repositories, either locally or remotely. We have learnt about push and pull commands that help us synchronize code across repositories. Let's look deeper into some of Git's essential concepts.</p>
+<p>Let's recall that when we make changes, we usually add these changes before committing the same to the repository. To understand this 2-step procedure, let's note that Git defines three distinct sections:</p>
+<ul>
+  <li><strong>Repository:</strong> This is really the <em>.git/</em> folder that stores the repository with all its metadata and object database. When files are committed they go into the repository.</li>
+  <li><strong>Staging Area:</strong> This is also managed within the <em>.git/</em> folder. It contains information of what will go into the next commit. In other words, it is a temporary area before the actual commit. It's also known as the <em>index</em>.</li>
+  <li><strong>Working Directory:</strong> This is where files are stored for you to work on. It's a particular snapshot of the repository. This snapshot may be from a specific commit, a branch or a tag.</li>
+</ul>
+<p>When files are modified, they show up as modifications in the working directory. When they are added, they go into the staging area for the next commit. When committed, they go into the repository. Once committed, the files will go into unmodified state with respect to the latest commit. Deleting a file is similar to editing one, except that to stage it the command is <code>git rm</code> rather than <code>git add</code>.</p>
+<div class="uk-grid">
+  <div class="uk-width-medium-2-5">Three sections
+    <img src="images/workshops/GitGitHub/areas.png" style="padding-right:0px;">
+  </div>
+  <div class="uk-width-medium-3-5">Lifecycle of a file
+    <img src="images/workshops/GitGitHub/lifecycle.png" style="padding-left:0px">
+  </div>
+</div>
+<p>A GitHub repository is a <em>bare repository</em>, which basically means that there is no associated working directory. GitHub is designed as a collaboration point, not a place to make code changes. Nonetheless, the web interface actually allows us to make quick edits and commits on single files. This can be handy at times but generally not used by developers on a regular basis.</p>
+<p>What if at times you wish to try out an older commit, possibly because files in the current working directory are not working as expected? The command that allows us to access any commit is <code>git checkout</code>, which brings the specified commit into our working directory:</p>
+{source}<?php echo geshiHighlight('# Checkout the entire repository from a named commit
+git checkout a972e21
+
+# Return to latest commit on the master branch
+git checkout master
+
+# Checkout a specific file or set of files from a named commit
+git checkout a972e21 quicksort.*
+
+# Return to latest commit of the files
+git checkout master quicksort.*
+', 'bash');?>{/source}
+<p>It will be obvious from the commands above that we can checkout the entire repository from a named commit or do it selectively for one or more files. When an entire repository is taken to a previous commit, Git gives us a <em>"detached HEAD"</em> warning. To interpret this, we need to understand the concept of <em>HEAD</em>. This is nothing more than a pointer to a specific commit that has been checked out into the working directory. Suppose we are working on the <em>master</em> branch, <em>HEAD</em> will typically point to the last commit on <em>master</em>. What a repository checkout does is to move the <em>HEAD</em> pointer to the specified commit. This is termed as a detached state since further commits from here will not possible. We will deal with this problem in the next section.</p>
+<p>The checkout command can cause problems if you have uncommitted changes in your working directory. In this case, Git will automatically attempt to merge these changes with what it brings from the named commit. If there's a conflict, Git will prompt the user to resolve the conflict manually. This may very well be intended if you wish to apply your uncommitted changes on top of the older commit. The other option is to save the changes to a temporary place before doing a checkout. This is known as <em>stashing</em>. Stashes are stored as a stack, last-in-first-out order. They are referenced as <code>stash@{0}</code>, <code>stash@{1}</code> ... where <code>stash@{0}</code> indicates the top of the stack. The following stash commands are usually useful (replace <em>&lt;stash&gt;</em> with <code>stash@{1}</code>, for example):</p>
+{source}<?php echo geshiHighlight('# Save to the top of stash stack with a message
+git stash save -u &lt;message&gt;
+
+# List the stack of all stashed code
+git stash list
+
+# Pop the top of stack and bring it into the working directory
+git stash pop
+
+# Pop the named stash entry and bring it into the working directory
+git stash pop &lt;stash&gt;
+
+# Apply the named stash entry but keep it in the stash stack
+git stash apply &lt;stash&gt;
+
+# Delete the named stash entry and leave the working directory unaffected
+git stash drop &lt;stash&gt;
+
+# Drop the entire stash stack
+git stash clear', 'bash');?>{/source}
+<p>The checkout command has another use. If you have made changes in your working directory and wish to discard these changes for a particular file or set of files, then <code>git checkout &lt;path&gt;</code> will have the desired effect. Likewise, if you added some changes to the staging area and wish to unstage them, then <code>git reset &lt;path&gt;</code> will do the job. The reset command will preserve the changes in your working directory.</p>
+
+
+<!-- ------------------------------------------------------------------------- -->
+<h2 class="topic-header">Branches & Forks</h2>
+<p>While it's true that each team member can work independently on their local repositories, and synchronize their changes via an upstream public repository, often the requirements of real-world projects are quite different. Suppose a sub-team is tasked with developing a new feature that may take weeks. But a software release is scheduled for next week. The rest of the project would want to continue to work towards the release without being hampered by changes due to the new feature. The new feature must therefore be developed on a separate <em>branch</em>. A branch simply isolates one line of development from the rest of the project. Once the branch becomes mature and is adequately tested, it can be merged to the <em>master</em> branch. While branches are often created from the <em>master</em> branch, we can create branches from any other branch.</p>
+<p>Branching is essential to any VCS. In many traditional VCS, branching implies a complete copy of the files in the repository. In other words, a separate working copy is created for every branch. This is where the power of Git comes through. In Git, a branch is a little more than the <em>HEAD</em> pointer pointing to a particular commit. The <code>git checkout</code> command be used to switch between branches:</p>
+{source}<?php echo geshiHighlight('# Create a branch from HEAD and switch to that branch
+git branch &lt;bname&gt;
+git checkout &lt;bname&gt;
+
+# Create a branch from a named commit and checkout the same 
+git checkout -b &lt;bname&gt; &lt;commit&gt;
+
+# Rename an existing branch
+git branch -m &lt;bname&gt;
+
+# Delete an existing branch
+git branch -d &lt;bname&gt;
+
+# List all the local branches in verbose mode
+git branch -v
+
+# List all local branches including upstream tracking information
+git branch -vv
+
+# List all remote branches and local branches
+git branch -a', 'bash');?>{/source}
+<p>Renaming or deleting existing branches should be done with care because if these branches are being used by others, it could cause complications while pulling from the upstream repository. Branches may be deleted if all changes have been merged back to the <em>master</em> branch or any other branch. If there are pending merges, Git will prompt the user of the same. In any case, it's common practice to leave branches as they are even after merging because their history may be important.</p>
+<p>The option <code>-vv</code> deserves a mention. This gives a verbose listing of all branches including tracking information on remote branches. In fact, we have been talking about remote repositories by the name <em>origin</em>. To refer to the master branch of the remote repository, we would say <em>origin/master</em>. When <code>git clone</code> is executed for making a local repository from a remote repository, or <code>git push -u origin master</code> is executed for pushing the local <em>master</em> branch, Git also makes the local <em>master</em> track the remote <em>origin/master</em>. This allows us to more easily see how branches of local and remote repositories have diverged. To view information on remote branches and their tracking, one may also type <code>git remote show origin</code>. If this listing shows that some remote branches are not tracked, it's easy to start tracking all remote branches with the command <code>git fetch -u origin</code>.</p>
+<p>The counterpart of branching is <em>merging</em>. Changes made in the branch are merged back to the parent branch or any other branch of the repository. The typical way to merge is to checkout the branch where the merge is to happen and select the branch that has to be merged. Suppose we wish to merge changes in the <em>iss53</em> branch to the <em>master</em> branch, we would execute these:</p>
+{source}<?php echo geshiHighlight('git checkout master
+git merge iss53', 'bash');?>{/source}
+<div class="uk-grid">
+  <div class="uk-width-medium-1-2">Before merge
+    <img src="images/workshops/GitGitHub/basic-merging-1.png" style="padding-right:0px;">
+  </div>
+  <div class="uk-width-medium-1-2">After merge
+    <img src="images/workshops/GitGitHub/basic-merging-2.png" style="padding-left:0px">
+  </div>
+</div>
+<p>The result of the merge in this example is that commit C6 is created. C6 has two parent commits: C4 and C5. Git was able to figure out what to merge because the two branches share a common ancestry in C2. This example shows what's called a <em>three-way merge</em> since both branches have changes after C2. In some cases, the master branch may have no changes (remains at C2, assuming C4 was never created). This leads to a trivial merge called <em>fast-forward merge</em>, where the merge is nothing more than moving the master branch to C5.</p>
+<p>As is common, Git will prompt the user to resolve manually any conflicts that may arise. If conflicts are too complex to resolve and you wish to abort the process, <code>git merge --abort</code> will serve the purpose. If we manage to resolve the conflicts, we can stage the files and commit. If there have been no conflicts in the first place, merge commits the changes automatically. Sometimes you may want to review the merge before making a commit. In this case, the <code>--no-commit</code> option to merge command will be useful.</p>
+<p>Let's now revisit the pull command. What we are trying to do is to synchronize from <em>origin/master</em> branch to our local <em>master</em> branch. In fact, <code>git pull</code> is really a <code>git fetch</code> followed by a <code>git merge</code> command. We may therefore view <em>pull</em> as a shortcut to <em>fetch</em> and <em>merge</em>. The latter is useful if we wish to do a <code>git diff</code> before deciding to merge. Thus, the following two sets of commands are equivalent:</p>
+{source}<?php echo geshiHighlight('git fetch origin master
+git checkout master
+git diff master origin/master
+git merge origin/master
+
+git pull origin master', 'bash');?>{/source}
+<p>Branching and pushing changes upstream is possible one for collaborators who have been granted write permission to the upstream repository. But in open source projects, hundreds of developers might start working on the repository. The administrative task of managing permissions itself becomes a chore. The solution in this case is for third-party developers to <em>fork</em> the repository into their GitHub account. In other words, a complete copy of the bare repository is created for the developer who can now work independently. He or she may form a separate team that works from this fork. When they think that their changes might be useful to the original repository, they will create a <em>pull request</em>. Owners of the original upstream repository may like these changes and decide to merge them into their work.</p>
+<p>It's interesting to note that pull requests can also be issued to initiate the merging of code from one branch to another. It's common practice to issue pull requests to initiate discussions and reviews prior to merging. Finally, let's note that while branching and merging are concepts of Git, forks and pull requests are concepts of GitHub to facilitate collaboration.</p>
+
+
+<!-- ------------------------------------------------------------------------- -->
+<h2 class="topic-header">Git Workflows</h2>
+<p>We have already talked about a couple of workflows. One of them is that all developers work from a single upstream repository. For simple linear development, they all work on the master branch in their local repositories and synchronize their contributions via the upstream repository.</p>
+<p>For big projects with many collaborators, branches are usually necessary. One common workflow is the <em>Gitflow workflow</em>. Formal releases are made on the master branch but all development will happen on a separate branch. Each feature may be developed on its own branch and merged into the development branch. Some projects may have a release branch as an intermediary before changes are merged to the master branch. For urgent fixes during deployment, hotfix branches may be created on the release branch or on the master branch. Different projects may adopt variations of this workflow depending on their requirements. The general idea is that branching can be used to avoid ripple effect and facilitate coordinated release cycles. Multiple teams can work in parallel. Third-party teams can be given write access to specific branches.</p>
+<img src="images/workshops/GitGitHub/gitflow.svg" style="padding-left:10%;max-width:80%">
+<p>How does one manage large open source projects? In this case, one has to work with multiple forks. Each fork may generate pull requests to the upstream repository. Their changes might conflict. Resolving these can be a problem. It's therefore important to always pull from the upstream repository as often as possible, merge the changes in your own fork before giving a pull request. An integration manager can also merge from different forks locally, test the integrated code and finally push the same to the upstream repository.</p>
+<img src="images/workshops/GitGitHub/integration-manager.png" style="padding-left:10%;max-width:80%">
+
+
+<!-- ------------------------------------------------------------------------- -->
+<h2 class="topic-header">What's Next?</h2>
+<p>There are quite a number of introductory videos and books on Git and GitHub. A couple of possible links to explore are below:</p>
+<ul>
+  <li><a href="https://git-scm.com/videos" target="_blank">Git Basics (Videos)</a></li>
+  <li><a href="https://training.github.com/resources/videos/" target="_blank">Videos on Git and GitHub</a></li>
+  <li><a href="https://training.github.com/resources/books/" target="_blank">Books on Git</a></li>
+  <li><a href="http://ndpsoftware.com/git-cheatsheet.html" target="_blank">An interactive cheatsheet</a></li>
+</ul>
+<p>The following references will also help:</p>
+<ul>
+  <li><a href="https://www.atlassian.com/git/glossary/terminology/" target="_blank">Git glossary</a></li>
+  <li><a href="https://help.github.com/articles/github-glossary/" target="_blank">GitHub glossary</a></li>
+  <li><a href="https://git-scm.com/docs" target="_blank">Git command reference</a></li>
+</ul>
+<p>Finally, here are some articles to read on specific topics:</p>
+<ul>
+  <li><a href="https://git-scm.com/blog/2011/07/11/reset.html" target="_blank">Reset demystified</a></li>
+  <li><a href="https://www.atlassian.com/git/tutorials/undoing-changes/git-revert" target="_blank">Checkout, revert, reset, clean</a></li>
+  <li><a href="http://longair.net/blog/2009/04/16/git-fetch-and-merge/" target="_blank">Fetch and merge, don’t pull</a></li>
+  <li><a href="http://gitolite.com/detached-head.html" target="_blank">Detached HEAD explained</a></li>
+  <li><a href="https://help.github.com/articles/setting-up-teams/" target="_blank">Setting up teams in GitHub</a></li>
+  <li><a href="https://www.atlassian.com/git/tutorials/comparing-workflows" target="_blank">Comparing workflows by Atlassian</a></li>
+  <li><a href="https://www.youtube.com/user/GitHubGuides" target="_blank">GitHub Training & Guides (YouTube channel)</a></li>
+</ul>
