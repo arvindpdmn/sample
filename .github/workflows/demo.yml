@@ -13,3 +13,15 @@ jobs:
         run: |
           echo Hello $greetname on $RUNNER_OS
           sleep 15
+
+  macos-run:
+    runs-on: macos-latest
+
+    env:
+      greetname: World
+
+    steps:
+      - name: Greet user
+        run: |
+          echo Hello $greetname on $RUNNER_OS
+          sleep 15
