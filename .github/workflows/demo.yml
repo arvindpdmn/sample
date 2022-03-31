@@ -16,7 +16,7 @@ jobs:
     steps:
       - name: Greet user
         run: |
-          echo $device $browser
+          echo $matrix.device $matrix.browser
           echo Hello $greetname on $RUNNER_OS
           sleep 15
 
