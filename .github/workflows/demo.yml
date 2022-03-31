@@ -1,12 +1,24 @@
 name: Demo
 on: [push]
+
 jobs:
-  setup-and-test:
+  ubuntu-run:
     runs-on: ubuntu-18.04
 
     env:
-      name: World
+      greetname: World
 
     steps:
       - name: Greet user
-        run: echo Hello ${{ env.name }}
+        run: echo Hello $greetname on $RUNNER_OS
+
+jobs:
+  macos-run:
+    runs-on: macos-latest
+
+    env:
+      greetname: World
+
+    steps:
+      - name: Greet user
+        run: echo Hello $greetname on $RUNNER_OS
