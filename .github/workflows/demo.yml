@@ -9,11 +9,7 @@ jobs:
       greetname: World
 
     steps:
-      - name: Checkout repository code
-        uses: actions/checkout@v3
-
       - name: Greet user
         run: |
           echo Hello $greetname on $RUNNER_OS
-          ls -a
           sleep 15
