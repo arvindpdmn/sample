@@ -5,26 +5,6 @@ jobs:
   ubuntu-run:
     runs-on: ubuntu-18.04
 
-    strategy:
-      matrix:
-        device: ['desktop', 'mobile']
-        browser: ['firefox', 'chrome']
-
-    env:
-      greetname: World
-
-    steps:
-      - name: Greet user
-        run: |
-          echo ${{ matrix.device }} ${{ matrix.browser }}
-          echo Hello $greetname on $RUNNER_OS
-          sleep 15
-
-  macos-run:
-    runs-on: macos-latest
-
-    needs: ubuntu-run
-
     env:
       greetname: World
 
@@ -32,4 +12,5 @@ jobs:
       - name: Greet user
         run: |
           echo Hello $greetname on $RUNNER_OS
+          ls -a
           sleep 15
