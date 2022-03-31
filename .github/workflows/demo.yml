@@ -10,7 +10,9 @@ jobs:
 
     steps:
       - name: Greet user
-        run: echo Hello $greetname on $RUNNER_OS
+        run: |
+          echo Hello $greetname on $RUNNER_OS
+          sleep 15
 
   macos-run:
     runs-on: macos-latest
@@ -20,4 +22,6 @@ jobs:
 
     steps:
       - name: Greet user
-        run: echo Hello $greetname on $RUNNER_OS
+        run: |
+          echo Hello $greetname on $RUNNER_OS
+          sleep 15
