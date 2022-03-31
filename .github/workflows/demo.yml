@@ -12,7 +12,6 @@ jobs:
       - name: Greet user
         run: echo Hello $greetname on $RUNNER_OS
 
-jobs:
   macos-run:
     runs-on: macos-latest
 
