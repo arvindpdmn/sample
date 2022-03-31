@@ -16,7 +16,10 @@ jobs:
     steps:
       - name: Greet user
         run: |
+          echo ${{ matrix.device }} ${{ matrix.browser }}
           echo Hello $greetname on $RUNNER_OS
+          pwd
+          ls -a
           sleep 15
 
   macos-run:
