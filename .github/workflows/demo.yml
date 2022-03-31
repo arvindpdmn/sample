@@ -8,4 +8,5 @@ jobs:
       name: World
 
     steps:
-      run: echo Hello ${{ env.name }}
+      - name: Greet user
+        run: echo Hello ${{ env.name }}
