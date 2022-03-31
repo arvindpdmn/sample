@@ -17,6 +17,8 @@ jobs:
   macos-run:
     runs-on: macos-latest
 
+    needs: ubuntu-run
+
     env:
       greetname: World
 
