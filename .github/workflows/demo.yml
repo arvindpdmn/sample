@@ -5,12 +5,18 @@ jobs:
   ubuntu-run:
     runs-on: ubuntu-18.04
 
+    strategy:
+      matrix:
+        device: ['desktop', 'mobile']
+        browser: ['firefox', 'chrome']
+
     env:
       greetname: World
 
     steps:
       - name: Greet user
         run: |
+          echo $device $browser
           echo Hello $greetname on $RUNNER_OS
           sleep 15
 
