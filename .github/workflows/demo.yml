@@ -5,6 +5,11 @@ jobs:
   ubuntu-run:
     runs-on: ubuntu-18.04
 
+    strategy:
+      matrix:
+        device: ['desktop', 'mobile']
+        browser: ['firefox', 'chrome']
+  
     env:
       greetname: World
 
